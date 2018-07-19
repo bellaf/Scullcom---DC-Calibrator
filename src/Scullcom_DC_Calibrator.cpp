@@ -33,7 +33,7 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(TFT_CS, TFT_DC, TFT_MOSI, TFT_CLK, TFT_R
 #define t_CS 4                      // Pin of display output connection T_CS
 #define t_MOSI 5                    // Pin of display output connection T_DIN
 #define t_MISO 6                    // Pin of display output connection T_DOUT
-#define t_IRQ 7                     // Pin of display output connection T_IRQ    
+#define t_IRQ 7                     // Pin of display output connection T_IRQ
 
 URTouch ts(t_SCK, t_CS, t_MOSI, t_MISO, t_IRQ); // Create an object of the sensor module and inform the library of the pinout for working with it
 
@@ -48,10 +48,22 @@ int n = 0;                          //index for myInput array
 char key;                           //keypad character
 int keyDelay = 500;                 //key bounce delay - was 1000 (change value as required)
 
+//------------------------------Declare all functions before they are called (CPP requirement)----------------------
+
+void setVoltageKeypad():
+void setCommonDisplay():
+void mainInputDisplay():
+void readTouchScreen():
+void keyPadEntry():
+void dacOutput():
+void displayVoltage():
+void checkMainSelection():
+void addNewNumber():
+
 //------------------------------Programme Set-up Routines--------------------------------------------------
 void setup()
 {
-  
+
   Serial.begin(9600);               //start serial monitor at 9600 baud - used for testing only
   pinMode(A0, OUTPUT);              //set A0 as a digital output pin
   digitalWrite(A0, LOW);            //set A0 output LOW
@@ -62,7 +74,7 @@ void setup()
   pinMode(A3, OUTPUT);              //set A3 as a digital output pin
   digitalWrite(A3, LOW);            //set A3 output LOW
   pinMode(A4, OUTPUT);              //set A4 as a digital output pin
-  digitalWrite(A4, LOW);            //set A4 output LOW  
+  digitalWrite(A4, LOW);            //set A4 output LOW
 
   volts = 0;                        //reset DAC output to zero at statup
   dacOutput();                      //set DAC output to volts
@@ -401,7 +413,7 @@ void dacOutput()                                  //set DAC output voltage routi
 {
 
   if (volts >= 8.001) {                           //if voltage is greater than 8.001V
-    volts = volts / 4;                            //divide set voltage by 4 for input to DAC                 
+    volts = volts / 4;                            //divide set voltage by 4 for input to DAC
     digitalWrite(A4, HIGH);                       //set reference voltage to 4.094V
     digitalWrite(A1, HIGH);                       //set INA105 gain switch to x2
     digitalWrite(A3, HIGH);                       //set INA105 gain switch to x2
@@ -411,7 +423,7 @@ void dacOutput()                                  //set DAC output voltage routi
     volts = volts * 4;                            //set TFT display reading to input reading
 
   } else if (volts > 4.000 && volts < 8.001) {    //if voltage is greater than 4V and less than 8.001V
-    volts = volts / 2;                            //divide set voltage by 2 for input to DAC  
+    volts = volts / 2;                            //divide set voltage by 2 for input to DAC
     digitalWrite(A4, HIGH);                       //set reference voltage to 4.094V
     digitalWrite(A1, LOW);                        //set INA105 gain switch to x1
     digitalWrite(A3, HIGH);                       //set INA105 gain switch to x2
@@ -427,7 +439,7 @@ void dacOutput()                                  //set DAC output voltage routi
     SPI.begin();                                  //Initializes the SPI bus
     DAC.Set((volts * 1000), 0);                   //write voltage to DAC
     SPI.end();                                    //Disables the SPI bus
-  
+
   } else if (volts > 1.000 && volts < 2.001) {    //if voltage is greater than 1V and less than 2.001V
     digitalWrite(A4, LOW);                        //set reference voltage to 1.024V
     digitalWrite(A1, LOW);                        //set INA105 gain switch to x1
@@ -435,7 +447,7 @@ void dacOutput()                                  //set DAC output voltage routi
     SPI.begin();                                  //Initializes the SPI bus
     DAC.Set((volts * 2000), 0);                   //write voltage to DAC
     SPI.end();                                    //Disables the SPI bus
-  
+
   }else{                                          //if voltage is 1V or less
     digitalWrite(A4, LOW);                        //set reference voltage to 1.024V
     digitalWrite(A1, LOW);                        //set INA105 gain switch to x1
@@ -444,7 +456,7 @@ void dacOutput()                                  //set DAC output voltage routi
     DAC.Set((volts * 4000), 0);                   //write voltage to DAC
     SPI.end();                                    //Disables the SPI bus
   }
- 
+
   voltsU = volts;                                 //set voltsU flag to volts - used to stop writing to DAC if volts unchanged
 }
 
@@ -498,4 +510,3 @@ void addNewNumber()                   //echo keypad entry numbers to display
   y = 0;
 }
 //------------------------------------------------------------------------------------------------------------
-
