@@ -50,15 +50,15 @@ int keyDelay = 500;                 //key bounce delay - was 1000 (change value 
 
 //------------------------------Declare all functions before they are called (CPP requirement)----------------------
 
-void setVoltageKeypad():
-void setCommonDisplay():
-void mainInputDisplay():
-void readTouchScreen():
-void keyPadEntry():
-void dacOutput():
-void displayVoltage():
-void checkMainSelection():
-void addNewNumber():
+void setVoltageKeypad();
+void setCommonDisplay();
+void mainInputDisplay();
+void readTouchScreen();
+void keyPadEntry();
+void dacOutput();
+void displayVoltage();
+void checkMainSelection();
+void addNewNumber();
 
 //------------------------------Programme Set-up Routines--------------------------------------------------
 void setup()
